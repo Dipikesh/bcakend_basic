@@ -2,8 +2,8 @@ const express = require('express')
 
 const app = express()
 app.use(express.json());
-app.use(express.urlencoded());
-
+app.use(express.urlencoded({ extended: true }));
+const validationMiddleware = require('./middleware')
 
 const products = [
   { id: 1, product_name: "Soap", price: 20 },
@@ -12,9 +12,19 @@ const products = [
   { id: 4, product_name: "Pillow", price: 20 },
 ];
 
+//route endpoints
 app.get('/products', (req, res) => {
     res.send(products);
 })
+
+app.post("/register", validationMiddleware.validation, function (req, res) {
+  console.log("Request passed to controller");
+    const email = req.body.email;
+  const password = req.body.password;
+
+  //save to database
+  res.send("Register success");
+});
 
 // localhost:3003/product/1
 app.get('/product/:id', (req, res) => { 
